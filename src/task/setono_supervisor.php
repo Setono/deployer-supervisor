@@ -71,5 +71,6 @@ task('supervisor:upload', static function (): void {
 })->desc('This task uploads your processed supervisor configs to the specified directory on your server');
 
 task('supervisor:start', static function (): void {
+    run('{{bin/supervisor}} reread');
     run('{{bin/supervisor}} start all');
 })->desc('Starts all services managed by Supervisor');
