@@ -52,7 +52,7 @@ startsecs=15
 ```
 
 In this example we insert a delay of 10 seconds before running the actual command and we changed the `startsecs`
-to 15 (5 seconds more than the delay) so that supervisor doesn't count the process a running before after 15 seconds.
+to 15 (5 seconds more than the delay) so that supervisor doesn't count the process as running before after 15 seconds.
 
 [ico-version]: https://poser.pugx.org/setono/deployer-supervisor/v/stable
 [ico-unstable-version]: https://poser.pugx.org/setono/deployer-supervisor/v/unstable
