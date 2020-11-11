@@ -1,4 +1,4 @@
-# Install the Symfony binary with Deployer
+# Handle Supervisor during your deployment
 
 [![Latest Version][ico-version]][link-packagist]
 [![Latest Unstable Version][ico-unstable-version]][link-packagist]
@@ -8,7 +8,7 @@
 ## Installation
 
 ```bash
-$ composer require setono/deployer-symfony
+$ composer require setono/deployer-supervisor
 ```
 
 ## Usage
@@ -20,17 +20,17 @@ In your `deploy.php` file require the recipe:
 
 namespace Deployer;
 
-require_once 'recipe/setono_symfony.php';
+require_once 'recipe/setono_supervisor.php';
 
 // ...
 ```
 
 This will automatically hook into the default flow of Deployer.
 
-[ico-version]: https://poser.pugx.org/setono/deployer-symfony/v/stable
-[ico-unstable-version]: https://poser.pugx.org/setono/deployer-symfony/v/unstable
-[ico-license]: https://poser.pugx.org/setono/deployer-symfony/license
-[ico-github-actions]: https://github.com/Setono/deployer-symfony/workflows/build/badge.svg
+[ico-version]: https://poser.pugx.org/setono/deployer-supervisor/v/stable
+[ico-unstable-version]: https://poser.pugx.org/setono/deployer-supervisor/v/unstable
+[ico-license]: https://poser.pugx.org/setono/deployer-supervisor/license
+[ico-github-actions]: https://github.com/Setono/deployer-supervisor/workflows/build/badge.svg
 
-[link-packagist]: https://packagist.org/packages/setono/deployer-symfony
-[link-github-actions]: https://github.com/Setono/deployer-symfony/actions
+[link-packagist]: https://packagist.org/packages/setono/deployer-supervisor
+[link-github-actions]: https://github.com/Setono/deployer-supervisor/actions
