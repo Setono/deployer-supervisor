@@ -54,7 +54,7 @@ task('supervisor:upload', static function (): void {
             continue;
         }
 
-        $mergedConfigs .= trim(file_get_contents($file->getRelativePathname())) . "\n\n";
+        $mergedConfigs .= trim(file_get_contents($file->getRealPath())) . "\n\n";
     }
 
     if ('' === $mergedConfigs) {
