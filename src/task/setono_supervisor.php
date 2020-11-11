@@ -58,7 +58,7 @@ task('supervisor:upload', static function (): void {
     }
 
     if ('' === $mergedConfigs) {
-        run('rm -rf {{supervisor_config_filename}}');
+        run('rm -rf {{supervisor_remote_dir}}/{{supervisor_config_filename}}');
 
         return;
     }
@@ -67,7 +67,7 @@ task('supervisor:upload', static function (): void {
      * This 'hack' will save a multiline text string into a file
      * See https://stackoverflow.com/questions/10969953/how-to-output-a-multiline-string-in-bash
      */
-    run("cat <<EOT > {{supervisor_config_filename}}\n{$mergedConfigs}EOT"); // todo create a test that checks for multiline replacements
+    run("cat <<EOT > {{supervisor_remote_dir}}/{{supervisor_config_filename}}\n{$mergedConfigs}EOT"); // todo create a test that checks for multiline replacements
 })->desc('This task uploads your processed supervisor configs to the specified directory on your server');
 
 task('supervisor:start', static function (): void {
