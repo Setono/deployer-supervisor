@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\Deployer\Supervisor;
 
-use Symfony\Component\Finder\SplFileInfo;
 use function Deployer\get;
 use function Deployer\locateBinaryPath;
 use function Deployer\run;
@@ -12,12 +11,17 @@ use function Deployer\set;
 use function Deployer\task;
 use function file_get_contents;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\Assert\Assert;
 
 /**
  * The supervisor(ctl) binary
  */
 set('bin/supervisor', static function (): string {
-    return locateBinaryPath('supervisorctl');
+    $binary = locateBinaryPath('supervisorctl');
+    Assert::string($binary);
+
+    return $binary;
 });
 
 /**
@@ -46,13 +50,19 @@ task('supervisor:stop', static function (): void {
 })->desc('Stops all services managed by Supervisor');
 
 task('supervisor:upload', static function (): void {
+    $sourceDir = get('supervisor_source_dir');
+    Assert::string($sourceDir);
+
     $finder = new Finder();
-    $finder->files()->in(get('supervisor_source_dir'));
+    $finder->files()->in($sourceDir);
+
+    $excludedFiles = get('supervisor_excluded_files');
+    Assert::isArray($excludedFiles);
 
     $mergedConfigs = '';
     /** @var SplFileInfo $file */
     foreach ($finder as $file) {
-        if (in_array($file->getFilename(), get('supervisor_excluded_files'), true)) {
+        if (in_array($file->getFilename(), $excludedFiles, true)) {
             continue;
         }
 
