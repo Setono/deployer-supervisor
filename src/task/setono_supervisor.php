@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Setono\Deployer\Supervisor;
 
+use Symfony\Component\Finder\SplFileInfo;
 use function Deployer\get;
 use function Deployer\locateBinaryPath;
 use function Deployer\run;
 use function Deployer\set;
 use function Deployer\task;
-use function Safe\file_get_contents;
+use function file_get_contents;
 use Symfony\Component\Finder\Finder;
 
 /**
  * The supervisor(ctl) binary
  */
-set('bin/supervisor', static function () {
+set('bin/supervisor', static function (): string {
     return locateBinaryPath('supervisorctl');
 });
 
@@ -49,6 +50,7 @@ task('supervisor:upload', static function (): void {
     $finder->files()->in(get('supervisor_source_dir'));
 
     $mergedConfigs = '';
+    /** @var SplFileInfo $file */
     foreach ($finder as $file) {
         if (in_array($file->getFilename(), get('supervisor_excluded_files'), true)) {
             continue;

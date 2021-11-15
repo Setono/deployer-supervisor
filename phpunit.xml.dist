@@ -8,7 +8,7 @@
         </include>
     </coverage>
     <testsuites>
-        <testsuite name="Deployer Systemd Test Suite">
+        <testsuite name="Deployer Supervisor Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
