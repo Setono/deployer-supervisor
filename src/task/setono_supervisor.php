@@ -9,14 +9,19 @@ use function Deployer\locateBinaryPath;
 use function Deployer\run;
 use function Deployer\set;
 use function Deployer\task;
-use function Safe\file_get_contents;
+use function file_get_contents;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\Assert\Assert;
 
 /**
  * The supervisor(ctl) binary
  */
-set('bin/supervisor', static function () {
-    return locateBinaryPath('supervisorctl');
+set('bin/supervisor', static function (): string {
+    $binary = locateBinaryPath('supervisorctl');
+    Assert::string($binary);
+
+    return $binary;
 });
 
 /**
@@ -40,17 +45,44 @@ set('supervisor_config_filename', '{{application}}-{{stage}}.conf');
  */
 set('supervisor_excluded_files', []);
 
+/**
+ * Whether to use a group based approach or not. Remember to also set supervisor_groups
+ */
+set('supervisor_group_based', false);
+
+/**
+ * The groups to start/stop if supervisor_group_based is true
+ */
+set('supervisor_groups', []);
+
 task('supervisor:stop', static function (): void {
-    run('{{bin/supervisor}} stop all');
+    if (get('supervisor_group_based') === true) {
+        $groups = get('supervisor_groups');
+        Assert::isArray($groups);
+        Assert::allString($groups);
+
+        foreach ($groups as $group) {
+            run(sprintf('{{bin/supervisor}} stop %s:*', $group));
+        }
+    } else {
+        run('{{bin/supervisor}} stop all');
+    }
 })->desc('Stops all services managed by Supervisor');
 
 task('supervisor:upload', static function (): void {
+    $sourceDir = get('supervisor_source_dir');
+    Assert::string($sourceDir);
+
     $finder = new Finder();
-    $finder->files()->in(get('supervisor_source_dir'));
+    $finder->files()->in($sourceDir);
+
+    $excludedFiles = get('supervisor_excluded_files');
+    Assert::isArray($excludedFiles);
 
     $mergedConfigs = '';
+    /** @var SplFileInfo $file */
     foreach ($finder as $file) {
-        if (in_array($file->getFilename(), get('supervisor_excluded_files'), true)) {
+        if (in_array($file->getFilename(), $excludedFiles, true)) {
             continue;
         }
 
@@ -71,6 +103,17 @@ task('supervisor:upload', static function (): void {
 })->desc('This task uploads your processed supervisor configs to the specified directory on your server');
 
 task('supervisor:start', static function (): void {
-    run('{{bin/supervisor}} update');
-    run('{{bin/supervisor}} start all');
+    if (get('supervisor_group_based') === true) {
+        $groups = get('supervisor_groups');
+        Assert::isArray($groups);
+        Assert::allString($groups);
+
+        foreach ($groups as $group) {
+            run(sprintf('{{bin/supervisor}} update %s', $group));
+            run(sprintf('{{bin/supervisor}} start %s:*', $group));
+        }
+    } else {
+        run('{{bin/supervisor}} update');
+        run('{{bin/supervisor}} start all');
+    }
 })->desc('Starts all services managed by Supervisor');

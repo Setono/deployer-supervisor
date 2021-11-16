@@ -5,8 +5,7 @@ on:
         branches:
             - "master"
     pull_request: ~
-    schedule:
-        -   cron: "5 8 * * 2"
+    workflow_dispatch: ~
 
 env:
     PHP_EXTENSIONS: "mbstring"
@@ -27,10 +26,10 @@ jobs:
 
         steps:
             -   name: "Checkout"
-                uses: "actions/checkout@v2.3.4"
+                uses: "actions/checkout@v2"
 
             -   name: "Install PHP with extensions"
-                uses: "shivammathur/setup-php@2.8.0"
+                uses: "shivammathur/setup-php@v2"
                 with:
                     coverage: "none"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -65,10 +64,10 @@ jobs:
 
         steps:
             -   name: "Checkout"
-                uses: "actions/checkout@v2.3.4"
+                uses: "actions/checkout@v2"
 
             -   name: "Install PHP with extensions"
-                uses: "shivammathur/setup-php@2.8.0"
+                uses: "shivammathur/setup-php@v2"
                 with:
                     coverage: "none"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -101,10 +100,10 @@ jobs:
 
         steps:
             -   name: "Checkout"
-                uses: "actions/checkout@v2.3.4"
+                uses: "actions/checkout@v2"
 
             -   name: "Install PHP with extensions"
-                uses: "shivammathur/setup-php@2.8.0"
+                uses: "shivammathur/setup-php@v2"
                 with:
                     coverage: "none"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -144,10 +143,10 @@ jobs:
 
         steps:
             -   name: "Checkout"
-                uses: "actions/checkout@v2.3.4"
+                uses: "actions/checkout@v2"
 
             -   name: "Setup PHP, with composer and extensions"
-                uses: "shivammathur/setup-php@2.8.0"
+                uses: "shivammathur/setup-php@v2"
                 with:
                     php-version: "${{ matrix.php-version }}"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
