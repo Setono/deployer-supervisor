@@ -11,7 +11,6 @@ use function Deployer\set;
 use function Deployer\task;
 use function file_get_contents;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Webmozart\Assert\Assert;
 
 /**
@@ -80,7 +79,6 @@ task('supervisor:upload', static function (): void {
     Assert::isArray($excludedFiles);
 
     $mergedConfigs = '';
-    /** @var SplFileInfo $file */
     foreach ($finder as $file) {
         if (in_array($file->getFilename(), $excludedFiles, true)) {
             continue;

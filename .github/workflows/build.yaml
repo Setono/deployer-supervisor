@@ -118,17 +118,7 @@ jobs:
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
 
-            -   name: "Create cache directory for phpstan/phpstan"
-                run: "mkdir -p .build/phpstan"
-
-            -   name: "Cache cache directory for phpstan/phpstan"
-                uses: "actions/cache@v2.1.3"
-                with:
-                    path: ".build/phpstan"
-                    key: "php-${{ matrix.php-version }}-phpstan-${{ github.sha }}"
-                    restore-keys: "php-${{ matrix.php-version }}-phpstan-"
-
-            -   name: "Run phpstan/phpstan"
+            -   name: "Run static analysis"
                 run: "composer analyse"
 
     unit-tests:
