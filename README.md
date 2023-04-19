@@ -1,7 +1,6 @@
 # Handle Supervisor during your deployment
 
 [![Latest Version][ico-version]][link-packagist]
-[![Latest Unstable Version][ico-unstable-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-github-actions]][link-github-actions]
 
@@ -55,7 +54,6 @@ In this example we insert a delay of 10 seconds before running the actual comman
 to 15 (5 seconds more than the delay) so that supervisor doesn't count the process as running before after 15 seconds.
 
 [ico-version]: https://poser.pugx.org/setono/deployer-supervisor/v/stable
-[ico-unstable-version]: https://poser.pugx.org/setono/deployer-supervisor/v/unstable
 [ico-license]: https://poser.pugx.org/setono/deployer-supervisor/license
 [ico-github-actions]: https://github.com/Setono/deployer-supervisor/workflows/build/badge.svg
 
