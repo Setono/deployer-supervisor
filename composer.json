@@ -1,8 +1,8 @@
 {
     "name": "setono/deployer-supervisor",
-    "type": "library",
     "description": "Handle supervisor configs in your deployment",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Joachim Løvgaard",
@@ -12,22 +12,15 @@
     "require": {
         "php": ">=7.4",
         "deployer/deployer": "^6.8",
-        "symfony/finder": "^4.4 || ^5.0",
-        "webmozart/assert": "^1.10"
+        "symfony/finder": "^4.4 || ^5.4 || ^6.0",
+        "webmozart/assert": "^1.11"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.16.1",
-        "setono/code-quality-pack": "^2.1.3"
+        "psalm/plugin-phpunit": "^0.18",
+        "setono/code-quality-pack": "^2.4"
     },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.1-dev"
-        }
-    },
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Setono\\Deployer\\Supervisor\\": "src/"
@@ -41,7 +34,18 @@
             "Setono\\Deployer\\Supervisor\\": "tests/"
         }
     },
-    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false,
+            "ergebnis/composer-normalize": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.1-dev"
+        }
+    },
     "scripts": {
         "analyse": "psalm --threads=8",
         "check-style": "ecs check",
