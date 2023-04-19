@@ -11,7 +11,4 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->parameters()->set(Option::PATHS, [
         'src', 'tests'
     ]);
-    $containerConfigurator->parameters()->set(Option::SKIP, [
-        'tests/Application/**',
-    ]);
 };
