@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.18",
+        "psalm/plugin-phpunit": "^0.18 || ^0.19",
         "setono/code-quality-pack": "^2.4"
     },
     "prefer-stable": true,
