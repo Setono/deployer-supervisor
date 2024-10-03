@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\Deployer\Supervisor;
 
+use function Deployer\commandExist;
 use function Deployer\get;
-use function Deployer\locateBinaryPath;
+use function Deployer\which;
 use function Deployer\run;
 use function Deployer\set;
 use function Deployer\task;
@@ -17,10 +18,11 @@ use Webmozart\Assert\Assert;
  * The supervisor(ctl) binary
  */
 set('bin/supervisor', static function (): string {
-    $binary = locateBinaryPath('supervisorctl');
-    Assert::string($binary);
+    if (commandExist('supervisorctl')) {
+        return which('supervisorctl');
+    }
 
-    return $binary;
+    throw new \RuntimeException('The supervisorctl binary could not be found');
 });
 
 /**
@@ -36,7 +38,7 @@ set('supervisor_remote_dir', '/etc/supervisor/conf.d');
 /**
  * This library will create a single final config file for supervisor. This will be the name of that file
  */
-set('supervisor_config_filename', '{{application}}-{{stage}}.conf');
+set('supervisor_config_filename', static fn() => sprintf('%s.conf', getStage()));
 
 /**
  * Contains an array of config files to exclude.
@@ -45,28 +47,17 @@ set('supervisor_config_filename', '{{application}}-{{stage}}.conf');
 set('supervisor_excluded_files', []);
 
 /**
- * Whether to use a group based approach or not. Remember to also set supervisor_groups
+ * An array of supervisor groups to manage
  */
-set('supervisor_group_based', false);
-
-/**
- * The groups to start/stop if supervisor_group_based is true
- */
-set('supervisor_groups', []);
+set('supervisor_groups', static fn() => throw new \RuntimeException('You must set the supervisor_groups parameter'));
 
 task('supervisor:stop', static function (): void {
-    if (get('supervisor_group_based') === true) {
-        $groups = get('supervisor_groups');
-        Assert::isArray($groups);
-        Assert::allString($groups);
+    $groups = getGroups();
 
-        foreach ($groups as $group) {
-            run(sprintf('{{bin/supervisor}} stop %s:*', $group));
-        }
-    } else {
-        run('{{bin/supervisor}} stop all');
+    foreach ($groups as $group) {
+        run(sprintf('{{bin/supervisor}} stop %s:*', $group));
     }
-})->desc('Stops all services managed by Supervisor');
+});
 
 task('supervisor:upload', static function (): void {
     $sourceDir = get('supervisor_source_dir');
@@ -101,17 +92,43 @@ task('supervisor:upload', static function (): void {
 })->desc('This task uploads your processed supervisor configs to the specified directory on your server');
 
 task('supervisor:start', static function (): void {
-    if (get('supervisor_group_based') === true) {
-        $groups = get('supervisor_groups');
-        Assert::isArray($groups);
-        Assert::allString($groups);
+    $groups = getGroups();
 
-        foreach ($groups as $group) {
-            run(sprintf('{{bin/supervisor}} update %s', $group));
-            run(sprintf('{{bin/supervisor}} start %s:*', $group));
-        }
-    } else {
-        run('{{bin/supervisor}} update');
-        run('{{bin/supervisor}} start all');
+    foreach ($groups as $group) {
+        run(sprintf('{{bin/supervisor}} update %s', $group));
+        run(sprintf('{{bin/supervisor}} start %s:*', $group));
     }
 })->desc('Starts all services managed by Supervisor');
+
+/**
+ * Returns the current stage or 'prod' if no stage is set
+ */
+function getStage(): string
+{
+    $labels = get('labels');
+    if (!is_array($labels)) {
+        return 'prod';
+    }
+
+    if (!isset($labels['stage'])) {
+        return 'prod';
+    }
+
+    $stage = $labels['stage'];
+    Assert::stringNotEmpty($stage);
+
+    return $stage;
+}
+
+/**
+ * @return list<string>
+ */
+function getGroups(): array
+{
+    $groups = get('supervisor_groups');
+    Assert::isArray($groups);
+    Assert::isList($groups);
+    Assert::allString($groups);
+
+    return $groups;
+}

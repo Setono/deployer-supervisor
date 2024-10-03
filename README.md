@@ -53,6 +53,32 @@ startsecs=15
 In this example we insert a delay of 10 seconds before running the actual command and we changed the `startsecs`
 to 15 (5 seconds more than the delay) so that supervisor doesn't count the process as running before after 15 seconds.
 
+## Testing
+
+1. Set correct permissions on the SSH keys:
+
+   ```shell
+   chmod 600 tests/docker/ssh/id_rsa && chmod 644 tests/docker/ssh/id_rsa.pub
+   ```
+
+2. Build the Docker image:
+
+   ```shell
+   docker build -t setono/deployer-supervisor --no-cache ./tests/docker
+   ```
+
+3. Run the Docker container:
+
+   ```shell
+   docker run -d -p 2222:22 setono/deployer-supervisor
+   ```
+
+4. Run the tests:
+
+   ```shell
+   vendor/bin/phpunit
+   ```
+
 [ico-version]: https://poser.pugx.org/setono/deployer-supervisor/v/stable
 [ico-license]: https://poser.pugx.org/setono/deployer-supervisor/license
 [ico-github-actions]: https://github.com/Setono/deployer-supervisor/workflows/build/badge.svg

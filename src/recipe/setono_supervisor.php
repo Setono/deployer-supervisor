@@ -9,8 +9,10 @@ use function Deployer\before;
 
 require_once 'task/setono_supervisor.php';
 
-before('supervisor:upload', 'supervisor:stop');
-before('deploy:symlink', 'supervisor:upload');
+before('deploy:symlink', [
+    'supervisor:stop',
+    'supervisor:upload',
+]);
 
 after('success', 'supervisor:start');
 after('deploy:failed', 'supervisor:start');
