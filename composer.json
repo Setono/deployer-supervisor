@@ -10,15 +10,15 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
-        "deployer/deployer": "^6.8",
-        "symfony/finder": "^4.4 || ^5.4 || ^6.0",
+        "php": ">=8.2",
+        "deployer/deployer": "^7.5",
+        "symfony/finder": "^7.0",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.18",
-        "setono/code-quality-pack": "^2.4"
+        "phpunit/phpunit": "^10.5",
+        "psalm/plugin-phpunit": "^0.19",
+        "setono/code-quality-pack": "^2.8"
     },
     "prefer-stable": true,
     "autoload": {
